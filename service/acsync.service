@@ -3,11 +3,9 @@ Description=acsync
 After=network.target remote-fs.target nss-lookup.target
 
 [Service]
-Type=notify
+Type=forking
 ExecStart=/opt/acsync/acsync.init start
 ExecStop=/opt/acsync/acsync.init stop
-KillSignal=SIGTERM
-PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

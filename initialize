@@ -30,11 +30,11 @@ echo 'Going to do it now!'
 
 
 # Sync up all the included syncable directories. 
-cat /etc/acsync.directories | while read SYNC_DIR; do
+cat /etc/acsync.directories | grep -v '^#' | while read SYNC_DIR; do
 
 
   if [ "$1" == "" ]; then
-    cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | while read REMOTE_IP; do
+    cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
       echo rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $SYNC_DIR/ $REMOTE_IP:$SYNC_DIR
       rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $SYNC_DIR/ $REMOTE_IP:$SYNC_DIR
     done

@@ -62,7 +62,7 @@ sync_dir /etc/acsync
   FILE=$(echo $linein | awk -F',' '{print $2}')
   ACTIONTIMESTAMP=$(echo $linein | awk -F',' '{print $1}')
   ACTION_NAME=$(echo $linein | awk -F',' '{print $3}')
-  if [ -f $FILE ] || [ -d $FILE ]; then
+  if [ -f "$FILE" ] || [ -d "$FILE" ]; then
     FILETIMESTAMP=$(date +%s -r $FILE)
   fi
   

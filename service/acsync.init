@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# acsync        Startup script for the acsync
+# chkconfig: 345 85 15
+#
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+start() {
+	RUNUSER="root"
+	su - $RUNUSER -c "setsid /opt/acsync/acsync > /dev/null 2>&1 &"
+	echo Launched acsync
+	echo Done.
+}
+
+stop() {
+		ps aux | grep /opt/acsync/acsync | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash
+		echo Killing acsync.
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  *)
+	echo $"Usage: acsync {start|stop|restart}"
+esac
+
+exit $?

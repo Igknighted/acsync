@@ -4,7 +4,7 @@ mkdir /tmp/install_acsync
 cd /tmp/acsync
 
 
-if [ -d /etc/systemd/system/ ]; then
+if [ -d /etc/systemd/system/ ] && type systemctl; then
   echo Detected systemd. Installing the service
   rm -rf /etc/systemd/system/acsync.service /opt/acsync
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.service

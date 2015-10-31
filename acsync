@@ -41,7 +41,7 @@ function delete_file {
 sync_file /etc/acsync.directories
 sync_file /etc/acsync.servers
 
-/usr/bin/inotifywait --timefmt '%s' --format %T','%w%f','%e -e create,delete,modify,move -mrq `echo $SYNC_DIRS` \
+/usr/bin/inotifywait --timefmt '%s' --format %T','%w%f','%e -e create,delete,modify,move -mrq /etc/acsync.directories /etc/acsync.servers `echo $SYNC_DIRS` \
  | while read linein; do
  
   FILE=$(echo $linein | awk -F',' '{print $2}')
@@ -50,6 +50,7 @@ sync_file /etc/acsync.servers
   if [ -f $FILE ] || [ -d $FILE ]; then
     FILETIMESTAMP=$(date +%s -r $FILE)
   fi
+  
   
   # detect deletion
   if [ "$ACTION_NAME" == "DELETE" ] ||  [ "$ACTION_NAME" == "MOVED_FROM" ]; then

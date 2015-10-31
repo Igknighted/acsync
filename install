@@ -56,3 +56,6 @@ wget https://raw.githubusercontent.com/Igknighted/acsync/master/acsync
 chmod +x acsync
 mv acsync /opt/acsync/
 
+wget https://raw.githubusercontent.com/Igknighted/acsync/master/initialize
+chmod +x initialize
+mv initialize /opt/acsync/

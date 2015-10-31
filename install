@@ -45,9 +45,8 @@ else
   exit 1
 fi
 
-touch /etc/acsync.directories
-touch /etc/acsync.servers
-mkdir /opt/acsync
+mkdir /etc/acsync /opt/acsync
+touch /etc/acsync/acsync.directories /etc/acsync/acsync.servers
 
 wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
 chmod +x acsync.init

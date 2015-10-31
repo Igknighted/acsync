@@ -1,0 +1,13 @@
+[Unit]
+Description=acsync
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=notify
+ExecStart=/opt/acsync/acsync
+ExecStop=/bin/kill -WINCH ${MAINPID}
+KillSignal=SIGTERM
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

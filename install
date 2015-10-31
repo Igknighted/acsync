@@ -10,6 +10,7 @@ if [ -d /etc/systemd/system/ ]; then
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.service
   mv acsync.service /etc/systemd/system/
   systemctl enable acsync.service
+  
 elif [ type chkconfig ]; then
   echo Detected init.d with chkconfig
   rm -rf /etc/init.d/acsync /opt/acsync
@@ -17,6 +18,7 @@ elif [ type chkconfig ]; then
   chmod +x acsync.init
   mv acsync.init /etc/init.d/acsync
   chkconfig acsync on
+  
 elif [ type update-rc.d  ]; then
   echo Detected init.d with update-rc.d 
   rm -rf /etc/init.d/acsync /opt/acsync
@@ -24,6 +26,7 @@ elif [ type update-rc.d  ]; then
   chmod +x acsync.init
   mv acsync.init /etc/init.d/acsync
   update-rc.d acsync defaults
+  
 else
   echo Unknown service system
   exit 1
@@ -31,9 +34,11 @@ fi
 
 if type yum; then
   yum install inotify-tools -y
+  
 elif type apt-get; then
   apt-get update
   apt-get install inotify-tools -y
+  
 else
   echo Unknown package manager
   exit 1
@@ -41,9 +46,13 @@ fi
 
 touch /etc/acsync.directories
 touch /etc/acsync.servers
+mkdir /opt/acsync
+
+wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
+chmod +x acsync.init
+mv acsync.init /opt/acsync/
 
 wget https://raw.githubusercontent.com/Igknighted/acsync/master/acsync
 chmod +x acsync
-mkdir /opt/acsync
 mv acsync /opt/acsync/
 

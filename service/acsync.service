@@ -4,8 +4,8 @@ After=network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=notify
-ExecStart=/opt/acsync/acsync
-ExecStop=/bin/kill -WINCH ${MAINPID}
+ExecStart=/opt/acsync/acsync.init start
+ExecStop=/opt/acsync/acsync.init stop
 KillSignal=SIGTERM
 PrivateTmp=true
 

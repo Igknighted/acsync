@@ -24,21 +24,18 @@ The file `/etc/acsync.directories` should contain parent directories to be copie
 /home/username
 ```
   
-Now we will need to start the service and configure it to autostart.  
+Now we will need to start the service. Note: `The service was already set to autostart when you ran the installer`  
 For systemd:
 ```
-systemctl enable acsync
 systemctl start acsync
 ```
 For RHEL with init.d:
 ```
 service acsync start
-chkconfig acsync on
 ```
 For Ubuntu and Debian:
 ```
 service acsync start
-update-rc.d acsync defaults
 ```
 
   

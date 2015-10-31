@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# yum install inotify-tools -y
+
+if [ ! type inotifywait ]; then
+  echo Need inotifywait command for this to work. Try installing inotify-tools.
+  exit
+fi
+
+MAX_USER_WATCHES=$(sysctl -a | grep fs.inotify.max_user_watches | awk '{print $NF}')
+if [ $MAX_USER_WATCHES -lt 1000000 ]; then
+  echo Raising max user watches.
+  sysctl -w fs.inotify.max_user_watches=1000000
+  sed -i -e '/fs.inotify.max_user_watches/d' /etc/sysctl.conf
+  echo fs.inotify.max_user_watches=1000000 >> /etc/sysctl.conf
+fi
+
+
+SYNC_DIRS=$(cat /etc/acsync.directories | grep -v '^#');
+
+LOCAL_IP_REGEX=$(echo $(ip a | awk '{ if( $1 == "inet") print $2 }' | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}") | sed 's/ /|/g')
+
+function sync_file {
+  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | while read REMOTE_IP; do
+    echo rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $1 $REMOTE_IP:$1
+    rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $1 $REMOTE_IP:$1
+  done
+}
+
+function delete_file {
+  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | while read REMOTE_IP; do
+    echo Removing $REMOTE_IP:$1
+    # Had to fork these into individual bash sessions to prevent problems....
+    echo 'ssh -o StrictHostKeyChecking=no '$REMOTE_IP' "rm -rfv '$1'"' | bash
+  done
+}
+
+sync_file /etc/acsync.directories
+sync_file /etc/acsync.servers
+
+/usr/bin/inotifywait --timefmt '%s' --format %T','%w%f','%e -e create,delete,modify,move -mrq `echo $SYNC_DIRS` \
+ | while read linein; do
+ 
+  FILE=$(echo $linein | awk -F',' '{print $2}')
+  ACTIONTIMESTAMP=$(echo $linein | awk -F',' '{print $1}')
+  ACTION_NAME=$(echo $linein | awk -F',' '{print $3}')
+  if [ -f $FILE ] || [ -d $FILE ]; then
+    FILETIMESTAMP=$(date +%s -r $FILE)
+  fi
+  
+  # detect deletion
+  if [ "$ACTION_NAME" == "DELETE" ] ||  [ "$ACTION_NAME" == "MOVED_FROM" ]; then
+    delete_file $FILE
+  
+  # detect if file was freshly modified
+  elif [ "$ACTIONTIMESTAMP" -gt "$FILETIMESTAMP" ] || [ "$ACTIONTIMESTAMP" -eq "$FILETIMESTAMP" ]; then
+    
+    sync_file $FILE
+  fi
+ done

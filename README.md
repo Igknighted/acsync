@@ -31,9 +31,9 @@ The following command will get all the neccessary files and install neccesary de
 ```
 # curl -s https://raw.githubusercontent.com/Igknighted/acsync/master/install  | bash
 ```
-After this, all the neccesary files for acsync will be there. We just need to configure it. There are two configuration files for this `/etc/acsync.servers` and `/etc/acsync.directories`. When you update these files on one server running acsync, it will get propagated to all the other servers automatically.  
+After this, all the neccesary files for acsync will be there. We just need to configure it. There are two configuration files for this `/etc/acsync/acsync.servers` and `/etc/acsync/acsync.directories`. When you update these files on one server running acsync, it will get propagated to all the other servers automatically.  
   
-The file `/etc/acsync.servers` should contain the IP addresses of each server (including the local server). For example:
+The file `/etc/acsync/acsync.servers` should contain the IP addresses of each server (including the local server). For example:
 ```
 192.168.3.1
 192.168.3.2
@@ -41,7 +41,7 @@ The file `/etc/acsync.servers` should contain the IP addresses of each server (i
 192.168.3.4
 ```
   
-The file `/etc/acsync.directories` should contain parent directories to be copied between servers. If you update this file, acsync needs to be restarted on every server.
+The file `/etc/acsync/acsync.directories` should contain parent directories to be copied between servers. If you update this file, acsync needs to be restarted on every server.
 ```
 /var/www
 /home/username

@@ -5,6 +5,10 @@ if ! type inotifywait; then
   exit
 fi
 
+if [ -d /var/run ]; then
+	echo $$ > /var/run/acsync
+fi
+
 MAX_USER_WATCHES=$(sysctl -a | grep fs.inotify.max_user_watches | awk '{print $NF}')
 if [ $MAX_USER_WATCHES -lt 1000000 ]; then
   echo Raising max user watches.

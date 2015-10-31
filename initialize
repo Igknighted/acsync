@@ -9,13 +9,13 @@ hostname -f
 
 if [ "$1" == "" ]; then
   echo All the remote servers in this list:
-  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX
+  cat /etc/acsync/acsync.servers | grep -vE $LOCAL_IP_REGEX
   echo
   echo are about to have these directories nuked and initialized from this server:
-  cat /etc/acsync.directories
+  cat /etc/acsync/acsync.directories
 else
   echo You are about to inialized $1 with the content of these directories:
-  cat /etc/acsync.directories
+  cat /etc/acsync/acsync.directories
 fi
 
 echo
@@ -30,11 +30,11 @@ echo 'Going to do it now!'
 
 
 # Sync up all the included syncable directories. 
-cat /etc/acsync.directories | grep -v '^#' | while read SYNC_DIR; do
+cat /etc/acsync/acsync.directories | grep -v '^#' | while read SYNC_DIR; do
 
 
   if [ "$1" == "" ]; then
-    cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
+    cat /etc/acsync/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
       echo rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $SYNC_DIR/ $REMOTE_IP:$SYNC_DIR
       rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $SYNC_DIR/ $REMOTE_IP:$SYNC_DIR
     done

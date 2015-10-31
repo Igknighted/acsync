@@ -58,27 +58,29 @@ sync_dir /etc/acsync
 
 /usr/bin/inotifywait --timefmt '%s' --format %T','%w%f','%e -e create,delete,modify,move -mrq /etc/acsync `echo $SYNC_DIRS` \
  | while read linein; do
- 
+
   FILE=$(echo $linein | awk -F',' '{print $2}')
   ACTIONTIMESTAMP=$(echo $linein | awk -F',' '{print $1}')
   ACTION_NAME=$(echo $linein | awk -F',' '{print $3}')
   if [ -f "$FILE" ] || [ -d "$FILE" ]; then
     FILETIMESTAMP=$(date +%s -r $FILE)
   fi
-  
-  
+
+
   # ensure that if directories are updated, all acsync services update the watchlist
   if [ -f /etc/acsync/acsync.directories ]; then
-    /opt/acsync/acsync.init restart &
+	/opt/acsync/acsync.init restart &
+	disown
+	exit
   fi
-  
+
   # detect deletion
   if [ "$ACTION_NAME" == "DELETE" ] ||  [ "$ACTION_NAME" == "MOVED_FROM" ]; then
     delete_file $FILE
-  
+
   # detect if file was freshly modified
   elif [ "$ACTIONTIMESTAMP" -gt "$FILETIMESTAMP" ] || [ "$ACTIONTIMESTAMP" -eq "$FILETIMESTAMP" ]; then
-    
+
     sync_file $FILE
   fi
  done

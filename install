@@ -1,0 +1,37 @@
+#!/bin/bash
+
+mkdir /tmp/install_acsync
+cd /tmp/acsync
+
+
+if [ -d /etc/systemd/system/ ]; then
+  echo Detected systemd. Installing the service
+  rm -rf /etc/systemd/system/acsync.service /opt/acsync
+  wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.service
+  mv acsync.service /etc/systemd/system/
+  systemctl enable acsync.service
+elif [ type chkconfig ]; then
+  echo Detected init.d with chkconfig
+  rm -rf /etc/init.d/acsync /opt/acsync
+  wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
+  chmod +x acsync.init
+  mv acsync.init /etc/init.d/acsync
+  chkconfig acsync on
+elif [ type update-rc.d  ]; then
+  echo Detected init.d with update-rc.d 
+  rm -rf /etc/init.d/acsync /opt/acsync
+  wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
+  chmod +x acsync.init
+  mv acsync.init /etc/init.d/acsync
+  update-rc.d acsync defaults
+fi
+
+
+touch /etc/acsync.directories
+touch /etc/acsync.servers
+
+wget https://raw.githubusercontent.com/Igknighted/acsync/master/acsync
+chmod +x acsync
+mkdir /opt/acsync
+mv acsync /opt/acsync/
+

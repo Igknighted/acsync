@@ -26,10 +26,13 @@ stop() {
 
 	if [ -d /var/run ] && [ -f /var/run/acsync ]; then
 		kill -9 `cat /var/run/acsync`
-	else
-		ps aux | grep /opt/acsync/acsync | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash
-		echo Killing acsync.
+		rm -rf /var/run/acsync
 	fi
+	
+	# Ensure full obliteration
+	ps aux | grep /opt/acsync/acsync | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash
+	
+	echo Done.
 }
 
 # See how we were called.

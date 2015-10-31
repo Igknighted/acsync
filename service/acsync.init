@@ -10,7 +10,7 @@ start() {
 	# If we want to use a cusom user
 	#RUNUSER="root"
 	#su - $RUNUSER -c "setsid /opt/acsync/acsync > /dev/null 2>&1 &"
-	
+
 	if [ -d /var/run ] && [ -f /var/run/acsync ]; then
 		if ps aux | grep `cat /var/run/acsync`; then
 			echo Instance of acsync already running
@@ -22,17 +22,21 @@ start() {
 	echo Done.
 }
 
+stop_iwatchnotify() {
+	ps aux | grep acsync | grep inotifywait | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash > /dev/null 2>&1
+}
+
 stop() {
 
 	if [ -d /var/run ] && [ -f /var/run/acsync ]; then
 		kill -9 `cat /var/run/acsync`
 		rm -rf /var/run/acsync
 	fi
-	
+
 	# Ensure full obliteration
 	ps aux | grep /opt/acsync/acsync | grep -v init | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash > /dev/null 2>&1
-	ps aux | grep acsync | grep inotifywait | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash > /dev/null 2>&1
-	
+	stop_iwatchnotify
+
 	echo Done.
 }
 status() {
@@ -46,6 +50,9 @@ status() {
 case "$1" in
   start)
 	start
+	;;
+  stop_iwatchnotify)
+	stop_iwatchnotify
 	;;
   stop)
 	stop

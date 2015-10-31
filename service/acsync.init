@@ -34,6 +34,12 @@ stop() {
 	
 	echo Done.
 }
+status() {
+
+	echo Below is a full list of acsync processes. There should be no more than 2 listed.
+	echo
+	ps aux | grep /opt/acsync/[a]csync | grep -v grep
+}
 
 # See how we were called.
 case "$1" in
@@ -43,12 +49,15 @@ case "$1" in
   stop)
 	stop
 	;;
+  status)
+	status
+	;;
   restart)
 	stop
 	start
 	;;
   *)
-	echo $"Usage: acsync {start|stop|restart}"
+	echo $"Usage: acsync {start|stop|restart|status}"
 esac
 
 exit $?

@@ -1,5 +1,4 @@
 #!/bin/bash
-# yum install inotify-tools -y
 
 if ! type inotifywait; then
   echo Need inotifywait command for this to work. Try installing inotify-tools.

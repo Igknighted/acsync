@@ -5,6 +5,7 @@ Tested on `RHEL 6`, `RHEL 7`, and `Ubuntu 15`.
 
 #### Things you need to know
 When writing acsync, my thought process was that I didn't want to go through a lengthy process of setting up a distributed file system like `glusterfs` and I didn't want a single point of failure having a single master server (like with `lsync`). I also couldn't just install `gitfs` on CentOS server without a buttload of compiling and fixing.
+- Setup is quick, dirty, and easy. It just works
 - Newest file wins, just like with `lsync`
 - There is no file locking like with `glusterfs`
 
@@ -13,6 +14,19 @@ When writing acsync, my thought process was that I didn't want to go through a l
 - Need to add server removal when sync fails
 
 ### Installation
+To get started with acsync on your servers, you will need to setup an SSH key pair that will sit on all of the servers you're syncing to. On the first server just run this:
+```
+# ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
+# cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+```
+Then sync them over to each server:
+```
+# rsync --delete -avz /root/.ssh/ 192.168.3.1:/root/.ssh
+# rsync --delete -avz /root/.ssh/ 192.168.3.2:/root/.ssh
+# rsync --delete -avz /root/.ssh/ 192.168.3.3:/root/.ssh
+# rsync --delete -avz /root/.ssh/ 192.168.3.4:/root/.ssh
+```
+
 The following command will get all the neccessary files and install neccesary dependencies:
 ```
 # curl -s https://raw.githubusercontent.com/Igknighted/acsync/master/install  | bash

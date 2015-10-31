@@ -17,6 +17,14 @@ if [ $MAX_USER_WATCHES -lt 1000000 ]; then
   echo fs.inotify.max_user_watches=1000000 >> /etc/sysctl.conf
 fi
 
+# make sure all the directories exist before running
+cat /etc/acsync/acsync.directories | grep -v '^#' | while read SYNC_DIR; do
+	if [ ! -d "$SYNC_DIR" ]; then
+		echo $SYNC_DIR does not exist on this server.
+		exit 1
+	fi
+done
+
 
 SYNC_DIRS=$(cat /etc/acsync/acsync.directories | grep -v '^#');
 
@@ -58,6 +66,11 @@ sync_dir /etc/acsync
     FILETIMESTAMP=$(date +%s -r $FILE)
   fi
   
+  
+  # ensure that if directories are updated, all acsync services update the watchlist
+  if [ -f /etc/acsync/acsync.directories ]; then
+    exec /opt/acsync/acsync
+  fi
   
   # detect deletion
   if [ "$ACTION_NAME" == "DELETE" ] ||  [ "$ACTION_NAME" == "MOVED_FROM" ]; then

@@ -7,8 +7,9 @@
 . /etc/rc.d/init.d/functions
 
 start() {
-	RUNUSER="root"
-	su - $RUNUSER -c "setsid /opt/acsync/acsync > /dev/null 2>&1 &"
+	#RUNUSER="root"
+	#su - $RUNUSER -c "setsid /opt/acsync/acsync > /dev/null 2>&1 &"
+	setsid /opt/acsync/acsync > /dev/null 2>&1 &
 	echo Launched acsync
 	echo Done.
 }

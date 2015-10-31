@@ -41,7 +41,7 @@ The file `/etc/acsync/acsync.servers` should contain the IP addresses of each se
 192.168.3.4
 ```
   
-The file `/etc/acsync/acsync.directories` should contain parent directories to be copied between servers. If you update this file, acsync needs to be restarted on every server.
+The file `/etc/acsync/acsync.directories` should contain parent directories to be copied between servers. If you update this file, just restart acsync on the node you're working from and will push it to the other servers. The other servers will automatically pick up the new directories. If you haven't already rsynced the data over to the other servers, you will probably want to run `/opt/acsync/initialize`.
 ```
 /var/www
 /home/username

@@ -24,8 +24,20 @@ elif [ type update-rc.d  ]; then
   chmod +x acsync.init
   mv acsync.init /etc/init.d/acsync
   update-rc.d acsync defaults
+else
+  echo Unknown service system
+  exit 1
 fi
 
+if type yum; then
+  yum install inotify-tools -y
+elif type apt-get; then
+  apt-get update
+  apt-get install inotify-tools -y
+else
+  echo Unknown package manager
+  exit 1
+fi
 
 touch /etc/acsync.directories
 touch /etc/acsync.servers

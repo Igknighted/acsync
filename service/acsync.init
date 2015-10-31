@@ -36,7 +36,7 @@ stop() {
 }
 status() {
 
-	echo Below is a full list of acsync processes. There should be no more than 2 listed.
+	echo Below is a full list of acsync processes.
 	echo
 	ps aux | grep /opt/acsync/[a]csync | grep -v grep | grep -v status
 }

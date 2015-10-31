@@ -69,7 +69,7 @@ sync_dir /etc/acsync
   
   # ensure that if directories are updated, all acsync services update the watchlist
   if [ -f /etc/acsync/acsync.directories ]; then
-    exec /opt/acsync/acsync
+    /opt/acsync/acsync.init restart &
   fi
   
   # detect deletion

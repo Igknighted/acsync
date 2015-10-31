@@ -12,7 +12,7 @@ if [ -d /etc/systemd/system/ ]; then
   systemctl daemon-reload
   systemctl enable acsync.service
   
-elif [ type chkconfig ]; then
+elif type chkconfig; then
   echo Detected init.d with chkconfig
   rm -rf /etc/init.d/acsync /opt/acsync
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
@@ -20,7 +20,7 @@ elif [ type chkconfig ]; then
   mv -fv acsync.init /etc/init.d/acsync
   chkconfig acsync on
   
-elif [ type update-rc.d  ]; then
+elif type update-rc.d; then
   echo Detected init.d with update-rc.d 
   rm -rf /etc/init.d/acsync /opt/acsync
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init

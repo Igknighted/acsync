@@ -46,7 +46,7 @@ function delete_file {
   done
 }
 
-sync_dir /etc/acsync/acsync
+sync_dir /etc/acsync
 
 /usr/bin/inotifywait --timefmt '%s' --format %T','%w%f','%e -e create,delete,modify,move -mrq /etc/acsync `echo $SYNC_DIRS` \
  | while read linein; do

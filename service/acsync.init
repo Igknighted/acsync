@@ -7,16 +7,29 @@
 . /etc/rc.d/init.d/functions
 
 start() {
+	# If we want to use a cusom user
 	#RUNUSER="root"
 	#su - $RUNUSER -c "setsid /opt/acsync/acsync > /dev/null 2>&1 &"
+	
+	if [ -d /var/run ] && [ -f /var/run/acsync ]; then
+		if ps aux | grep `cat /var/run/acsync`; then
+			echo Instance of acsync already running
+			exit
+		fi
+	fi
 	setsid /opt/acsync/acsync > /dev/null 2>&1 &
 	echo Launched acsync
 	echo Done.
 }
 
 stop() {
+
+	if [ -d /var/run ] && [ -f /var/run/acsync ]; then
+		kill -9 `cat /var/run/acsync`
+	else
 		ps aux | grep /opt/acsync/acsync | awk '{print "ps aux | grep acsync | grep -q \""$2"\" && kill -9 "$2}' |  bash
 		echo Killing acsync.
+	fi
 }
 
 # See how we were called.

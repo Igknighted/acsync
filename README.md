@@ -53,6 +53,8 @@ Note: `The service was already set to autostart when you ran the installer`
 After setting up the configuration files and starting acsync, you will need to initialize the servers from the original servers. Just run this script to sync all the directories to the other servers: `/opt/acsync/initialize`
 
 ### Starting the service
+Every server you start this service on will push files to other servers listed in `/etc/acsync/acsync.servers`. There are no node limitations.  
+
 For systemd:
 ```
 systemctl start acsync

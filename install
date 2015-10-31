@@ -8,7 +8,8 @@ if [ -d /etc/systemd/system/ ]; then
   echo Detected systemd. Installing the service
   rm -rf /etc/systemd/system/acsync.service /opt/acsync
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.service
-  mv acsync.service /etc/systemd/system/
+  mv -fv acsync.service /etc/systemd/system/
+  systemctl daemon-reload
   systemctl enable acsync.service
   
 elif [ type chkconfig ]; then
@@ -16,7 +17,7 @@ elif [ type chkconfig ]; then
   rm -rf /etc/init.d/acsync /opt/acsync
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
   chmod +x acsync.init
-  mv acsync.init /etc/init.d/acsync
+  mv -fv acsync.init /etc/init.d/acsync
   chkconfig acsync on
   
 elif [ type update-rc.d  ]; then
@@ -24,7 +25,7 @@ elif [ type update-rc.d  ]; then
   rm -rf /etc/init.d/acsync /opt/acsync
   wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
   chmod +x acsync.init
-  mv acsync.init /etc/init.d/acsync
+  mv -fv acsync.init /etc/init.d/acsync
   update-rc.d acsync defaults
   
 else
@@ -50,12 +51,12 @@ mkdir /opt/acsync
 
 wget https://raw.githubusercontent.com/Igknighted/acsync/master/service/acsync.init
 chmod +x acsync.init
-mv acsync.init /opt/acsync/
+mv -fv acsync.init /opt/acsync/
 
 wget https://raw.githubusercontent.com/Igknighted/acsync/master/acsync
 chmod +x acsync
-mv acsync /opt/acsync/
+mv -fv acsync /opt/acsync/
 
 wget https://raw.githubusercontent.com/Igknighted/acsync/master/initialize
 chmod +x initialize
-mv initialize /opt/acsync/
+mv -fv initialize /opt/acsync/

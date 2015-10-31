@@ -11,8 +11,8 @@ echo You have 10 seconds to cancel with CTRL+C
 for i in {10..1}; do 
   echo -n "$i .. "
   sleep 1;
-done \
-echo \
+done 
+echo 
 echo 'Going to do it now!'
 
 

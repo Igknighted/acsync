@@ -30,6 +30,14 @@ function sync_file {
   done
 }
 
+
+function sync_dir {
+  cat /etc/acsync/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
+    echo rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $1/ $REMOTE_IP:$1
+    rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $1/ $REMOTE_IP:$1
+  done
+}
+
 function delete_file {
   cat /etc/acsync/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
     echo Removing $REMOTE_IP:$1
@@ -38,8 +46,7 @@ function delete_file {
   done
 }
 
-sync_file /etc/acsync/acsync.directories
-sync_file /etc/acsync/acsync.servers
+sync_dir /etc/acsync/acsync
 
 /usr/bin/inotifywait --timefmt '%s' --format %T','%w%f','%e -e create,delete,modify,move -mrq /etc/acsync `echo $SYNC_DIRS` \
  | while read linein; do

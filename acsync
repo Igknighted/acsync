@@ -24,14 +24,14 @@ LOCAL_IP_REGEX=$(echo $(ip a | awk '{ if( $1 == "inet") print $2 }' | grep -E -o
 
 
 function sync_file {
-  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | while read REMOTE_IP; do
+  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
     echo rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $1 $REMOTE_IP:$1
     rsync -e "ssh -o StrictHostKeyChecking=no" --temp-dir=/tmp --delete -avz $1 $REMOTE_IP:$1
   done
 }
 
 function delete_file {
-  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | while read REMOTE_IP; do
+  cat /etc/acsync.servers | grep -vE $LOCAL_IP_REGEX | grep -v '^#' | while read REMOTE_IP; do
     echo Removing $REMOTE_IP:$1
     # Had to fork these into individual bash sessions to prevent problems....
     echo 'ssh -o StrictHostKeyChecking=no '$REMOTE_IP' "rm -rfv '$1'"' | bash

@@ -5,7 +5,7 @@ Tested on `RHEL 6`, `RHEL 7`, and `Ubuntu 15`.
 
 #### Things you need to know
 When writing acsync, my thought process was that I didn't want to go through a lengthy process of setting up a distributed file system like `glusterfs` and I didn't want a single point of failure having a single master server (like with `lsync`). I also couldn't just install `gitfs` on CentOS server without a buttload of compiling and fixing.
-- Setup is quick, dirty, and easy. It just works
+- Setup is quick and easy. It just works
 - Newest file wins, just like with `lsync`
 - There is no file locking like with `glusterfs`
 
